@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        SONARQUBE = 'SonarQube' 
+        SONARQUBE = 'BankSonar' 
     }
 
     stages {
