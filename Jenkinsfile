@@ -11,11 +11,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/ravik07/NewOne.git'
-            }
-        }
 
         stage('Build') {
             steps {
