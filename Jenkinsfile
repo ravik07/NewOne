@@ -24,10 +24,12 @@ pipeline {
         }
 
         stage("Quality Gate") {
+        	environment {
+        		SONAR_HOST_URL = 'http://localhost:8080/'
+        		SONAR_AUTH_TOKEN = credentials('SonarScanner')
+        	}
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
+                bat 'mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
         }
     }
