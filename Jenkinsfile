@@ -6,10 +6,6 @@ pipeline {
         jdk 'Java17'  
     }
 
-    environment {
-        SONARQUBE = 'BankSonar' 
-    }
-
     stages {
 
         stage('Build') {
@@ -20,7 +16,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SONARQUBE') {
+                withSonarQubeEnv('BankSonar') {
                     bat 'mvn sonar:sonar'
                 }
             }
