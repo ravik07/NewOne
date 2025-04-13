@@ -2,16 +2,16 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'
-        jdk 'Java17'
+        maven 'Maven'       // Ensure this matches the name in Jenkins Global Tools
+        jdk 'Java17'        // Ensure this matches the name in Jenkins Global Tools
     }
 
     environment {
-        // This ID must match your Jenkins Credentials ID (Secret Text)
-        SONARQUBE_TOKEN = credentials('SonarScanner')
+        SONAR_TOKEN = credentials('SonarScanner') // Make sure this credential exists in Jenkins
     }
 
     stages {
+
         stage('Build') {
             steps {
                 bat 'mvn clean install'
@@ -20,8 +20,8 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('BankSonar') {
-                    bat 'mvn sonar:sonar -Dsonar.login=%SONARQUBE_TOKEN%'
+                withSonarQubeEnv('BankSonar') { // 'BankSonar' must match your Jenkins Sonar server name
+                    bat "mvn sonar:sonar -Dsonar.login=%SONAR_TOKEN%"
                 }
             }
         }
