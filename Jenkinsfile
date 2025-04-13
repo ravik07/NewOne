@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven' 
-        jdk 'Java17'  
+        maven 'Maven'
+        jdk 'Java17'
     }
 
     environment {
-        // Global SonarQube env vars (optional)
-        // Set in Jenkins credentials as Secret Text
-        SONARQUBE_TOKEN = credentials('SonarScanner')  
+        // This ID must match your Jenkins Credentials ID (Secret Text)
+        SONARQUBE_TOKEN = credentials('SonarScanner')
     }
 
     stages {
@@ -22,14 +21,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('BankSonar') {
-                    bat 'mvn sonar:sonar'
+                    bat 'mvn sonar:sonar -Dsonar.login=%SONARQUBE_TOKEN%'
                 }
             }
         }
 
         stage('Quality Gate') {
             steps {
-                // This step waits for the Quality Gate result
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
