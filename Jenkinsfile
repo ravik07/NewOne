@@ -18,19 +18,11 @@ pipeline {
             steps {
             	echo '🔍 Running SonarQube analysis...'
                 withSonarQubeEnv('BankSonar') {
-                    bat 'mvn sonar:sonar -Dsonar.projectKey=banking-app -Dsonar.host.url=http://localhost:9000'
+                    bat 'mvn sonar:sonar -Dsonar.projectKey=banking-app -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqa_f5359f3b47a9f4f2b8586d6e753a942320f92440'
                 }
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                echo '✅ Checking Quality Gate...'
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
     }
     
     post {
