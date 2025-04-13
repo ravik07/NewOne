@@ -6,9 +6,13 @@ pipeline {
         jdk 'Java17'  
     }
 
+    environment {
+        // Global SonarQube env vars (optional)
+        // Set in Jenkins credentials as Secret Text
+        SONARQUBE_TOKEN = credentials('SonarScanner')  
+    }
 
     stages {
-
         stage('Build') {
             steps {
                 bat 'mvn clean install'
@@ -23,13 +27,12 @@ pipeline {
             }
         }
 
-        stage("Quality Gate") {
-        	environment {
-        		SONAR_HOST_URL = 'http://localhost:8080/'
-        		SONAR_AUTH_TOKEN = credentials('SonarScanner')
-        	}
+        stage('Quality Gate') {
             steps {
-                bat 'mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
+                // This step waits for the Quality Gate result
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
