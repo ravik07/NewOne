@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'       // Ensure this matches the name in Jenkins Global Tools
-        jdk 'Java17'        // Ensure this matches the name in Jenkins Global Tools
+        maven 'Maven' 
+        jdk 'Java17'  
     }
 
     environment {
-        SONAR_TOKEN = credentials('SonarScanner') // Make sure this credential exists in Jenkins
+        SONARQUBE = 'BankSonar' 
     }
 
     stages {
@@ -20,13 +20,13 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('BankSonar') { // 'BankSonar' must match your Jenkins Sonar server name
-                    bat "mvn sonar:sonar -Dsonar.login=%SONAR_TOKEN%"
+                withSonarQubeEnv('SONARQUBE') {
+                    bat 'mvn sonar:sonar'
                 }
             }
         }
 
-        stage('Quality Gate') {
+        stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
